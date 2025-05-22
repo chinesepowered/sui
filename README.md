@@ -8,6 +8,26 @@
 
 Sui Battle AR is an innovative on-chain PvP NFT battle game built on the Sui blockchain, designed specifically for in-person events like conferences and conventions. It creates engaging social interactions between attendees through NFT battles with real consequences - win and evolve, or lose and get burned!
 
+## Demo
+
+### Screenshots
+
+![Leaderboard Screen](public/screen1.png)
+![Battle Result Screen](public/screen2.png)
+
+### Presentation Deck
+
+Check out our [presentation deck](https://www.canva.com/design/DAGoJMZwzPo/HhCVDW6Viu30u7ueoOb56Q/edit?utm_content=DAGoJMZwzPo&utm_campaign=designshare&utm_medium=link2&utm_source=sharebutton) for more details on the project concept and implementation.
+
+### Demo Video
+
+<video width="100%" controls>
+  <source src="public/demo.mp4" type="video/mp4">
+  Your browser does not support the video tag.
+</video>
+
+You can also download the [demo video](public/demo.mp4) directly.
+
 ## Deployed Contract
 
 The Sui Battle AR smart contract has been successfully deployed to the Sui Testnet:
@@ -74,26 +94,6 @@ The project consists of:
 - Custom NFT visuals based on battle history and mutations
 - Event-specific themes and special NFT types
 - Tournament mode with bracketed competition
-
-## Demo
-
-### Screenshots
-
-![Leaderboard Screen](screen1.png)
-![Battle Result Screen](screen2.png)
-
-### Presentation Deck
-
-Check out our [presentation deck](https://www.canva.com/design/DAGoJMZwzPo/HhCVDW6Viu30u7ueoOb56Q/edit?utm_content=DAGoJMZwzPo&utm_campaign=designshare&utm_medium=link2&utm_source=sharebutton) for more details on the project concept and implementation.
-
-### Demo Video
-
-<video width="100%" controls>
-  <source src="public/demo.mp4" type="video/mp4">
-  Your browser does not support the video tag.
-</video>
-
-You can also download the [demo video](public/demo.mp4) directly.
 
 ## Acknowledgments
 
