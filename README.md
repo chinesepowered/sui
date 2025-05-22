@@ -13,7 +13,7 @@ Sui Battle AR is an innovative on-chain PvP NFT battle game built on the Sui blo
 The Sui Battle AR smart contract has been successfully deployed to the Sui Testnet:
 
 - **Package ID**: `0x757b3cc8c5d97c431e0299408414ccf09046583c59e26e9cf3b2e7a0b77376ce`
-- **Published Modules**: `game`
+- **Published Modules**: `game` ([View Source Code](contracts/sources/game.move))
 
 ## Core Game Mechanics
 
@@ -74,6 +74,26 @@ The project consists of:
 - Custom NFT visuals based on battle history and mutations
 - Event-specific themes and special NFT types
 - Tournament mode with bracketed competition
+
+## Demo
+
+### Screenshots
+
+![Leaderboard Screen](screen1.png)
+![Battle Result Screen](screen2.png)
+
+### Presentation Deck
+
+Check out our [presentation deck](https://www.canva.com/design/DAGoJMZwzPo/HhCVDW6Viu30u7ueoOb56Q/edit?utm_content=DAGoJMZwzPo&utm_campaign=designshare&utm_medium=link2&utm_source=sharebutton) for more details on the project concept and implementation.
+
+### Demo Video
+
+<video width="100%" controls>
+  <source src="public/demo.mp4" type="video/mp4">
+  Your browser does not support the video tag.
+</video>
+
+You can also download the [demo video](public/demo.mp4) directly.
 
 ## Acknowledgments
 
