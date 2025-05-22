@@ -78,11 +78,11 @@ module 0x0::game {
     
     // === Admin Functions ===
     
-    // Fixed: Changed &mut Random to &Random for entry function
+    #[allow(lint(public_random))]
     public entry fun batch_mint(
         _: &AdminCap,
         addresses: vector<address>,
-        random_obj: &Random, // Changed from &mut Random
+        random_obj: &Random,
         ctx: &mut TxContext
     ) {
         let i = 0;
@@ -91,7 +91,7 @@ module 0x0::game {
         while (i < len) {
             let addr = *vector::borrow(&addresses, i);
             // Fixed: Using correct function from random module
-            let random_number = random::u64_with_max(random_obj, 3);
+            let random_number = (random::bits(random_obj) % 3);
             let nft_type = (random_number as u8);
             
             let nft = BattleNFT {
@@ -141,12 +141,12 @@ module 0x0::game {
     }
     
     // Accept a battle from another player
-    // Fixed: Changed &mut Random to &Random for entry function
+    #[allow(lint(public_random))]
     public entry fun battle_with(
         responder_nft: &mut BattleNFT,
         requester_nft: &mut BattleNFT,
-        random_obj: &Random, // Changed from &mut Random
-        clock: &Clock, // Kept for future use even if currently unused
+        random_obj: &Random,
+        _clock: &Clock, // Prefixed with underscore to indicate it's unused
         ctx: &mut TxContext
     ) {
         let responder = tx_context::sender(ctx);
@@ -212,11 +212,10 @@ module 0x0::game {
     // === Helper Functions ===
     
     // Determine the winner based on NFT types and probability
-    // Fixed: Changed &mut Random to &Random to match entry function signature
     fun determine_winner(
         responder_type: u8,
         requester_type: u8,
-        random_obj: &Random // Changed from &mut Random
+        random_obj: &Random
     ): bool {
         // Calculate win probability for responder
         let responder_win_probability = if (responder_type == requester_type) {
@@ -236,7 +235,7 @@ module 0x0::game {
         
         // Generate random number between 0 and 99
         // Fixed: Using correct function from random module
-        let random_value = random::u64_with_max(random_obj, MAX_PROBABILITY);
+        let random_value = random::bits(random_obj) % MAX_PROBABILITY;
         
         // Return true if responder wins
         random_value < responder_win_probability
