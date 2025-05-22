@@ -4,7 +4,7 @@ const nextConfig = {
   swcMinify: true,
   transpilePackages: [
     "@mysten/sui.js",
-    "@mysten/wallet-kit"
+    "@mysten/dapp-kit"
   ],
 };
 

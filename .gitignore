@@ -11,3 +11,8 @@ dependencies/
 build/ 
 
 node_modules/
+
+# Next.js ignores
+.next/
+.swc/
+.*.env
