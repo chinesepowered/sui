@@ -3,6 +3,7 @@
 import React from 'react';
 import { ConnectButton } from '@mysten/dapp-kit';
 import { useGameStore } from '../store/gameStore';
+import Link from 'next/link';
 
 export default function GameHeader() {
   const { currentPlayer } = useGameStore();
@@ -22,6 +23,13 @@ export default function GameHeader() {
         </div>
         
         <div className="flex items-center gap-4">
+          <Link 
+            href="/mobile" 
+            className="px-4 py-2 rounded-lg bg-purple-800/50 text-white text-sm hover:bg-purple-800/70 transition-colors"
+          >
+            Try Mobile Mode
+          </Link>
+          
           {currentPlayer && (
             <div className="hidden md:block">
               <div className="text-gray-400 text-sm">Playing as</div>
