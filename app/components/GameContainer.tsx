@@ -1,3 +1,5 @@
+"use client";
+
 import React, { useEffect, useState } from 'react';
 import { useGameStore, Player } from '../store/gameStore';
 import GameHeader from './GameHeader';
@@ -22,9 +24,11 @@ export default function GameContainer() {
     loadDemoData();
   }, []);
   
-  // Filter out current player from opponents list
+  // Filter out current player from opponents list and ensure they have NFTs for battle
   const opponents = players.filter((player: Player) => 
-    currentPlayer && player.address !== currentPlayer.address
+    currentPlayer && 
+    player.address !== currentPlayer.address && 
+    player.nft !== undefined
   );
   
   return (
@@ -67,7 +71,7 @@ export default function GameContainer() {
                         <PlayerCard 
                           player={currentPlayer} 
                           isCurrentPlayer={true}
-                          hasNft={true}
+                          hasNft={currentPlayer.nft !== undefined}
                         />
                       </div>
                     </div>
@@ -76,7 +80,7 @@ export default function GameContainer() {
                   {/* Opponent selection */}
                   <div className="mt-12">
                     <h2 className="text-xl font-bold mb-6 text-center text-white">
-                      {selectedOpponent ? 'Ready to Battle!' : 'Select an Opponent'}
+                      {selectedOpponent ? 'Ready to Battle!' : 'Select an Opponent to Battle'}
                     </h2>
                     
                     {selectedOpponent ? (
@@ -85,6 +89,7 @@ export default function GameContainer() {
                           <PlayerCard 
                             player={selectedOpponent} 
                             selected={true}
+                            hasNft={selectedOpponent.nft !== undefined}
                           />
                         </div>
                         
@@ -104,14 +109,24 @@ export default function GameContainer() {
                         </div>
                       </div>
                     ) : (
-                      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                        {opponents.map((player: Player) => (
-                          <PlayerCard 
-                            key={player.address}
-                            player={player}
-                            onClick={() => selectOpponent(player)}
-                          />
-                        ))}
+                      <div>
+                        {opponents.length > 0 ? (
+                          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                            {opponents.map((player: Player) => (
+                              <PlayerCard 
+                                key={player.address}
+                                player={player}
+                                onClick={() => selectOpponent(player)}
+                                hasNft={player.nft !== undefined}
+                              />
+                            ))}
+                          </div>
+                        ) : (
+                          <div className="text-center p-8 bg-card-bg rounded-xl border border-purple-900/30">
+                            <p className="text-gray-300 mb-4">No opponents with NFTs available for battle.</p>
+                            <p className="text-sm text-gray-400">All players must have NFTs to participate in battles.</p>
+                          </div>
+                        )}
                       </div>
                     )}
                   </div>

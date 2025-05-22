@@ -1,4 +1,6 @@
-@import "tailwindcss";
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
 :root {
   --background: #0f172a;
@@ -64,48 +66,44 @@ body {
   }
 }
 
-.battle-button {
-  background: linear-gradient(135deg, var(--accent-color-light), var(--accent-color-dark));
-  transition: all 0.3s ease;
-}
+@layer components {
+  .battle-button {
+    @apply bg-gradient-to-r from-accent-color-light to-accent-color-dark transition-all duration-300;
+  }
 
-.battle-button:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 10px 25px -5px rgba(124, 58, 237, 0.4);
-}
+  .battle-button:hover {
+    @apply transform -translate-y-0.5 shadow-lg shadow-purple-500/30;
+  }
 
-.card {
-  background: var(--card-bg);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  transition: all 0.3s ease;
-}
+  .card {
+    @apply bg-card-bg border border-white/10 transition-all duration-300;
+  }
 
-.card:hover {
-  background: var(--card-bg-hover);
-  transform: translateY(-5px);
-  box-shadow: 0 15px 30px -5px rgba(0, 0, 0, 0.3);
-}
+  .card:hover {
+    @apply bg-card-bg-hover transform -translate-y-1 shadow-xl shadow-black/30;
+  }
 
-.type-a {
-  background: linear-gradient(135deg, #f43f5e, #ec4899);
-}
+  .type-a {
+    @apply bg-gradient-to-r from-pink-600 to-pink-500;
+  }
 
-.type-b {
-  background: linear-gradient(135deg, #3b82f6, #60a5fa);
-}
+  .type-b {
+    @apply bg-gradient-to-r from-blue-600 to-blue-500;
+  }
 
-.type-c {
-  background: linear-gradient(135deg, #10b981, #34d399);
-}
+  .type-c {
+    @apply bg-gradient-to-r from-green-600 to-green-500;
+  }
 
-.animate-pulse {
-  animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
-}
+  .animate-pulse {
+    animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  }
 
-.animate-float {
-  animation: float 3s ease-in-out infinite;
-}
+  .animate-float {
+    animation: float 3s ease-in-out infinite;
+  }
 
-.animate-rotate {
-  animation: rotate 10s linear infinite;
+  .animate-rotate {
+    animation: rotate 10s linear infinite;
+  }
 }

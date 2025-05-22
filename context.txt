@@ -1,0 +1,34 @@
+I’m building an on-chain PvP NFT battle game on the Sui blockchain, designed for IRL events (like conferences) but submitted to a virtual hackathon. Every attendee receives an NFT minted by the event organizer.
+
+🔥 Game Summary:
+Organizer mints one NFT per pre-approved wallet address.
+
+Each NFT has a type: A, B, or C, assigned randomly.
+
+Players challenge each other using a two-step battle process for fairness:
+
+Player A proposes a battle (calls propose_battle(B))
+
+Player B accepts the battle (calls battle_with(A))
+
+This ensures both players meet and consent, preventing battle-farming abuse.
+
+🧬 Battle Rules:
+A beats B 75% of the time
+
+B beats C 75% of the time
+
+C beats A 75% of the time
+
+Same type = 50/50
+
+🧬 Outcome:
+Winner's NFT mutates to a new type based on a deterministic rule (A+B → C, etc.)
+
+Winner’s kill count increases by 1
+
+Loser’s NFT is burned
+
+The goal is to survive and evolve through battles. A leaderboard (off-chain) ranks players by kill count. Trait visuals and complex metadata are not required for the hackathon version.
+
+I want  full front-end that's clean and impressive UI that I can DEMO how this game would work. so more on impressive demo than scalable/etc. can mock or fake some components for ease of demo. it's a short demo.

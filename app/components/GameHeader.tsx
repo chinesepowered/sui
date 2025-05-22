@@ -1,3 +1,5 @@
+"use client";
+
 import React from 'react';
 import { ConnectButton } from '@mysten/dapp-kit';
 import { useGameStore } from '../store/gameStore';

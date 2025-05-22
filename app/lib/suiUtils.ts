@@ -1,8 +1,7 @@
-import { SuiClient } from "@mysten/sui.js/client";
+import { SuiClient } from "@mysten/sui/client";
 import { NETWORK_RPC_URL, PACKAGE_ID, MODULE_NAME } from './constants';
 
-// Initialize SUI client
-export const suiClient = new SuiClient({ url: NETWORK_RPC_URL });
+// Note: We'll no longer initialize SuiClient directly here, as we're using the dapp-kit provider
 
 // For the demo, we'll simulate blockchain calls
 export const simulateBattleProposal = async (

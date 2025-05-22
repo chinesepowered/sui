@@ -2,7 +2,7 @@
 const nextConfig = {
   reactStrictMode: true,
   transpilePackages: [
-    "@mysten/sui.js",
+    "@mysten/sui",
     "@mysten/dapp-kit"
   ],
 };

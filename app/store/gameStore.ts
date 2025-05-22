@@ -1,3 +1,5 @@
+"use client";
+
 import { create } from 'zustand';
 import { NFT_TYPE, DEMO_USERS } from '../lib/constants';
 
@@ -90,7 +92,30 @@ export const useGameStore = create<GameState>((set) => ({
         };
       }
       return nft;
-    }).filter(nft => nft.owner !== result.loser.address) // Remove loser's NFT
+    }).filter(nft => nft.owner !== result.loser.address), // Remove loser's NFT
+
+    // Update players list to reflect NFT changes
+    players: state.players.map(player => {
+      if (player.address === result.winner.address) {
+        // Update winner's NFT
+        return {
+          ...player,
+          nft: {
+            ...result.winner.nft!,
+            type: result.winnerNewType,
+            kills: result.winnerKills,
+            mutations: result.winnerMutations
+          }
+        };
+      } else if (player.address === result.loser.address) {
+        // Remove loser's NFT
+        return {
+          ...player,
+          nft: undefined
+        };
+      }
+      return player;
+    })
   })),
   
   selectOpponent: (player) => set({ selectedOpponent: player }),
@@ -106,11 +131,7 @@ export const useGameStore = create<GameState>((set) => ({
   }),
   
   loadDemoData: () => set(() => {
-    const demoPlayers = DEMO_USERS.map(user => ({
-      address: user.address,
-      name: user.name
-    }));
-    
+    // Create NFTs from demo data
     const demoNfts = DEMO_USERS.map(user => ({
       id: user.nftId,
       owner: user.address,
@@ -119,11 +140,15 @@ export const useGameStore = create<GameState>((set) => ({
       mutations: user.mutations
     }));
     
+    // Create players with associated NFTs
+    const demoPlayers = DEMO_USERS.map((user, index) => ({
+      address: user.address,
+      name: user.name,
+      nft: demoNfts[index] // Associate NFT with player
+    }));
+    
     // Set the first player as current player
-    const currentPlayer = {
-      ...demoPlayers[0],
-      nft: demoNfts[0]
-    };
+    const currentPlayer = demoPlayers[0];
     
     return {
       players: demoPlayers,

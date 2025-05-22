@@ -1,3 +1,5 @@
+"use client";
+
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import NFTCard from './NFTCard';
@@ -20,9 +22,15 @@ export default function BattleArena() {
   const [winner, setWinner] = useState<Player | null>(null);
   const [loser, setLoser] = useState<Player | null>(null);
   const [newType, setNewType] = useState<number | null>(null);
+  const [battleInfo, setBattleInfo] = useState<string>('');
 
   useEffect(() => {
     if (isBattling && battlePhase === 'preparing') {
+      if (currentPlayer?.nft && selectedOpponent?.nft) {
+        // Set battle info based on NFT types
+        setBattleInfo(getBattleInfo(currentPlayer.nft.type, selectedOpponent.nft.type));
+      }
+      
       setTimeout(() => {
         setIsAnimating(true);
         setBattlePhase('animation');
@@ -35,7 +43,35 @@ export default function BattleArena() {
         }, 3000);
       }, 1000);
     }
-  }, [isBattling, battlePhase]);
+  }, [isBattling, battlePhase, currentPlayer, selectedOpponent]);
+
+  // Generate battle info text based on NFT types
+  const getBattleInfo = (playerType: number, opponentType: number) => {
+    const getTypeName = (type: number) => type === 0 ? 'A' : type === 1 ? 'B' : 'C';
+    const playerTypeName = getTypeName(playerType);
+    const opponentTypeName = getTypeName(opponentType);
+    
+    if (playerType === opponentType) {
+      return `Both players have Type ${playerTypeName} NFTs - 50/50 chance!`;
+    }
+    
+    let advantagePlayer = '';
+    let winChance = '';
+    
+    if (
+      (playerType === NFT_TYPE.A && opponentType === NFT_TYPE.B) ||
+      (playerType === NFT_TYPE.B && opponentType === NFT_TYPE.C) ||
+      (playerType === NFT_TYPE.C && opponentType === NFT_TYPE.A)
+    ) {
+      advantagePlayer = 'You have';
+      winChance = '75%';
+    } else {
+      advantagePlayer = 'Opponent has';
+      winChance = '25%';
+    }
+    
+    return `You: Type ${playerTypeName} vs Opponent: Type ${opponentTypeName} - ${advantagePlayer} ${winChance} chance to win!`;
+  };
 
   const determineWinner = () => {
     if (!currentPlayer || !selectedOpponent || !currentPlayer.nft || !selectedOpponent.nft) return;
@@ -119,6 +155,10 @@ export default function BattleArena() {
     setNewType(null);
   };
 
+  const getTypeText = (type: number) => {
+    return type === 0 ? 'A' : type === 1 ? 'B' : 'C';
+  };
+
   if (!currentPlayer || !selectedOpponent || !currentPlayer.nft || !selectedOpponent.nft) {
     return null;
   }
@@ -132,6 +172,13 @@ export default function BattleArena() {
         
         <div className="relative z-10">
           <h2 className="text-center text-2xl font-bold mb-8 text-white">Battle Arena</h2>
+          
+          {/* Battle info text */}
+          {battleInfo && (
+            <div className="text-center mb-8 p-2 bg-purple-900/30 rounded-lg">
+              <p className="text-white">{battleInfo}</p>
+            </div>
+          )}
           
           {battlePhase === 'preparing' && (
             <div className="text-center mb-8">
@@ -148,6 +195,11 @@ export default function BattleArena() {
           <div className="flex flex-col md:flex-row justify-around items-center gap-8">
             <div className="text-center">
               <h3 className="text-white font-bold mb-2">{currentPlayer.name}</h3>
+              <div className="flex items-center justify-center mb-2">
+                <span className="bg-purple-900/50 px-3 py-1 rounded-full text-xs text-white">
+                  Type {getTypeText(currentPlayer.nft.type)}
+                </span>
+              </div>
               <NFTCard 
                 nft={currentPlayer.nft} 
                 className="w-64 h-80"
@@ -170,14 +222,28 @@ export default function BattleArena() {
               {battlePhase === 'result' && (
                 <div className="text-center p-4 bg-black/30 rounded-lg">
                   <h3 className="text-xl font-bold text-purple-400 mb-2">Battle Result</h3>
-                  <p className="text-white">
-                    <span className="font-bold">{winner?.name}</span> won the battle!
-                  </p>
-                  {newType !== null && (
-                    <p className="text-gray-300 mt-2">
-                      Their NFT mutated to Type {newType === 0 ? 'A' : newType === 1 ? 'B' : 'C'}
+                  
+                  <div className="mb-4 p-3 bg-gradient-to-r from-purple-600/50 to-indigo-600/50 rounded-lg">
+                    <p className="text-white text-lg">
+                      <span className="font-bold">{winner?.name}</span> wins!
                     </p>
+                    <p className="text-gray-300 mt-1">
+                      <span className="font-bold">{loser?.name}</span>'s NFT was burned
+                    </p>
+                  </div>
+                  
+                  {newType !== null && winner && (
+                    <div className="mb-4 p-3 bg-gradient-to-r from-green-600/30 to-teal-600/30 rounded-lg">
+                      <p className="text-white">
+                        <span className="font-bold">{winner.name}'s NFT</span> mutated:
+                      </p>
+                      <p className="text-gray-300 mt-1">
+                        Type {winner === currentPlayer ? getTypeText(currentPlayer.nft.type) : getTypeText(selectedOpponent.nft.type)} → 
+                        <span className="font-bold text-white"> Type {getTypeText(newType)}</span>
+                      </p>
+                    </div>
                   )}
+                  
                   <button 
                     className="battle-button mt-4 px-4 py-2 rounded-lg text-white text-sm font-bold"
                     onClick={handleFinishBattle}
@@ -190,6 +256,11 @@ export default function BattleArena() {
             
             <div className="text-center">
               <h3 className="text-white font-bold mb-2">{selectedOpponent.name}</h3>
+              <div className="flex items-center justify-center mb-2">
+                <span className="bg-purple-900/50 px-3 py-1 rounded-full text-xs text-white">
+                  Type {getTypeText(selectedOpponent.nft.type)}
+                </span>
+              </div>
               <NFTCard 
                 nft={selectedOpponent.nft} 
                 className="w-64 h-80"
