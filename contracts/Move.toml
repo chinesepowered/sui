@@ -1,10 +1,10 @@
 [package]
 name = "sui_battle_ar"
 version = "0.1.0"
-published-at = ""
+published-at = "0x0" # Replace with your published address once deployed
 
 [dependencies]
 Sui = { git = "https://github.com/MystenLabs/sui.git", subdir = "crates/sui-framework/packages/sui-framework", rev = "framework/testnet" }
 
 [addresses]
-nft_battle = "0x0"
+sui_battle_ar = "0xc1cdc0da8efc173ee3742274ba0174a944f2170cb9955642a1f0c9c91c255b8f" # Replace with your account address

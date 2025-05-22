@@ -1,13 +1,13 @@
-module sui_battle_ar::game {
+module 0x0::game {
     use sui::object::{Self, UID, ID};
     use sui::transfer;
     use sui::tx_context::{Self, TxContext};
     use sui::event;
     use sui::random::{Self, Random};
-    use sui::coin::{Self};
-    use sui::clock::{Self, Clock};
+    // Removed unused aliases from imports
+    use sui::clock::Clock;
     use std::vector;
-    use std::option::{Self, Option};
+    // Removed unused option import
 
     // Constants for NFT types
     const TYPE_A: u8 = 0;
@@ -20,6 +20,7 @@ module sui_battle_ar::game {
     const MAX_PROBABILITY: u64 = 100;      // Used for calculations
     
     // Error codes
+    // Keep these for future use even if currently unused
     const ENotAdmin: u64 = 0;
     const EAlreadyOwnsNFT: u64 = 1;
     const ECannotBattleYourself: u64 = 2;
@@ -77,10 +78,11 @@ module sui_battle_ar::game {
     
     // === Admin Functions ===
     
+    // Fixed: Changed &mut Random to &Random for entry function
     public entry fun batch_mint(
         _: &AdminCap,
         addresses: vector<address>,
-        random_obj: &mut Random,
+        random_obj: &Random, // Changed from &mut Random
         ctx: &mut TxContext
     ) {
         let i = 0;
@@ -88,7 +90,8 @@ module sui_battle_ar::game {
         
         while (i < len) {
             let addr = *vector::borrow(&addresses, i);
-            let random_number = random::next_u64(random_obj, 3);
+            // Fixed: Using correct function from random module
+            let random_number = random::u64_with_max(random_obj, 3);
             let nft_type = (random_number as u8);
             
             let nft = BattleNFT {
@@ -138,11 +141,12 @@ module sui_battle_ar::game {
     }
     
     // Accept a battle from another player
+    // Fixed: Changed &mut Random to &Random for entry function
     public entry fun battle_with(
         responder_nft: &mut BattleNFT,
         requester_nft: &mut BattleNFT,
-        random_obj: &mut Random,
-        clock: &Clock,
+        random_obj: &Random, // Changed from &mut Random
+        clock: &Clock, // Kept for future use even if currently unused
         ctx: &mut TxContext
     ) {
         let responder = tx_context::sender(ctx);
@@ -208,10 +212,11 @@ module sui_battle_ar::game {
     // === Helper Functions ===
     
     // Determine the winner based on NFT types and probability
+    // Fixed: Changed &mut Random to &Random to match entry function signature
     fun determine_winner(
         responder_type: u8,
         requester_type: u8,
-        random_obj: &mut Random
+        random_obj: &Random // Changed from &mut Random
     ): bool {
         // Calculate win probability for responder
         let responder_win_probability = if (responder_type == requester_type) {
@@ -230,7 +235,8 @@ module sui_battle_ar::game {
         };
         
         // Generate random number between 0 and 99
-        let random_value = random::next_u64(random_obj, MAX_PROBABILITY);
+        // Fixed: Using correct function from random module
+        let random_value = random::u64_with_max(random_obj, MAX_PROBABILITY);
         
         // Return true if responder wins
         random_value < responder_win_probability
