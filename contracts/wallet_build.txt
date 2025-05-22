@@ -1,0 +1,12 @@
+sui client new-address ed25519
+
+curl --location --request POST 'https://faucet.testnet.sui.io/v2/gas' \
+--header 'Content-Type: application/json' \
+--data-raw '{
+    "FixedAmountRequest": {
+        "recipient": "0xc1cdc0da8efc173ee3742274ba0174a944f2170cb9955642a1f0c9c91c255b8f"
+    }
+}'
+
+sui move build
+

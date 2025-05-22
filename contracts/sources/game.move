@@ -1,4 +1,4 @@
-module nft_battle::game {
+module sui_battle_ar::game {
     use sui::object::{Self, UID, ID};
     use sui::transfer;
     use sui::tx_context::{Self, TxContext};
