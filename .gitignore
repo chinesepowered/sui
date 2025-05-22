@@ -1,0 +1,11 @@
+# Ignore the build directory for contracts
+contracts/sources/build/
+
+# Common Sui/Move ignores
+*.sui/
+
+# Dependency build artifacts (often within .sui/ but good to be explicit)
+dependencies/
+
+# Compiled scripts and modules (often within .sui/ but good to be explicit)
+build/ 
