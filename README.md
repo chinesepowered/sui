@@ -68,13 +68,6 @@ The project consists of:
    - Battle animations and visualizations
    - Leaderboard tracking
 
-## Getting Started
-
-1. Clone the repository
-2. Install dependencies: `npm install`
-3. Run the development server: `npm run dev`
-4. Open [http://localhost:3000](http://localhost:3000) in your browser
-
 ## Future Improvements
 
 - AR visualization of NFT battles in physical space
@@ -82,10 +75,6 @@ The project consists of:
 - Event-specific themes and special NFT types
 - Tournament mode with bracketed competition
 
-## License
-
-MIT
-
 ## Acknowledgments
 
-Built for the Sui Hackathon 2023
+Built for Sui Overflow 2025
