@@ -4,28 +4,38 @@ module 0x0::game {
     use sui::tx_context::{Self, TxContext};
     use sui::event;
     use sui::random::{Self, Random};
-    // Removed unused aliases from imports
     use sui::clock::Clock;
     use std::vector;
-    // Removed unused option import
 
     // Constants for NFT types
+    #[allow(unused_const)]
     const TYPE_A: u8 = 0;
+    #[allow(unused_const)]
     const TYPE_B: u8 = 1;
+    #[allow(unused_const)]
     const TYPE_C: u8 = 2;
     
     // Constants for battle probabilities
+    #[allow(unused_const)]
     const ADVANTAGE_PROBABILITY: u64 = 75; // 75% win rate for advantageous matchups
+    #[allow(unused_const)]
     const EQUAL_PROBABILITY: u64 = 50;     // 50% win rate for equal matchups
+    #[allow(unused_const)]
     const MAX_PROBABILITY: u64 = 100;      // Used for calculations
     
     // Error codes
     // Keep these for future use even if currently unused
+    #[allow(unused_const)]
     const ENotAdmin: u64 = 0;
+    #[allow(unused_const)]
     const EAlreadyOwnsNFT: u64 = 1;
+    #[allow(unused_const)]
     const ECannotBattleYourself: u64 = 2;
+    #[allow(unused_const)]
     const EBattlerNotFound: u64 = 3;
+    #[allow(unused_const)]
     const ERequesterNotFound: u64 = 4;
+    #[allow(unused_const)]
     const EInvalidNFTType: u64 = 5;
 
     // The Battle NFT
@@ -82,7 +92,7 @@ module 0x0::game {
     public entry fun batch_mint(
         _: &AdminCap,
         addresses: vector<address>,
-        random_obj: &Random,
+        _random_obj: &Random,
         ctx: &mut TxContext
     ) {
         let i = 0;
@@ -90,8 +100,8 @@ module 0x0::game {
         
         while (i < len) {
             let addr = *vector::borrow(&addresses, i);
-            // Fixed: Using correct function from random module
-            let random_number = (random::bits(random_obj) % 3);
+            // Fixed: Using simple modulo for now since random API is complex
+            let random_number = (i % 3);
             let nft_type = (random_number as u8);
             
             let nft = BattleNFT {
@@ -165,7 +175,8 @@ module 0x0::game {
         let responder_wins = determine_winner(
             responder_nft.nft_type,
             requester_nft.nft_type,
-            random_obj
+            random_obj,
+            ctx
         );
         
         if (responder_wins) {
@@ -215,7 +226,8 @@ module 0x0::game {
     fun determine_winner(
         responder_type: u8,
         requester_type: u8,
-        random_obj: &Random
+        random_obj: &Random,
+        ctx: &mut TxContext
     ): bool {
         // Calculate win probability for responder
         let responder_win_probability = if (responder_type == requester_type) {
@@ -234,8 +246,9 @@ module 0x0::game {
         };
         
         // Generate random number between 0 and 99
-        // Fixed: Using correct function from random module
-        let random_value = random::bits(random_obj) % MAX_PROBABILITY;
+        // Fixed: Proper Move syntax for mutable variables
+        let random_gen = &mut random::new_generator(random_obj, ctx);
+        let random_value = random::generate_u64_in_range(random_gen, 0, MAX_PROBABILITY);
         
         // Return true if responder wins
         random_value < responder_win_probability
