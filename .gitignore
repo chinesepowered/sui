@@ -9,3 +9,5 @@ dependencies/
 
 # Compiled scripts and modules (often within .sui/ but good to be explicit)
 build/ 
+
+node_modules/
