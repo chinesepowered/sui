@@ -94,6 +94,16 @@ export default function MobileBattle({ onBattleComplete }: MobileBattleProps) {
   const getTypeColorClass = (type: number) => {
     return type === 0 ? 'bg-pink-600' : type === 1 ? 'bg-blue-600' : 'bg-green-600';
   };
+
+  // Get character image based on NFT type
+  const getCharacterImage = (type: number) => {
+    switch (type) {
+      case 0: return '/cat.jpg';      // Type A
+      case 1: return '/llama.jpg';    // Type B
+      case 2: return '/dog.jpg';      // Type C
+      default: return '/cat.jpg';
+    }
+  };
   
   const handleReset = () => {
     setBattleStage('scan');
@@ -111,14 +121,28 @@ export default function MobileBattle({ onBattleComplete }: MobileBattleProps) {
           
           {currentPlayer && currentPlayer.nft && (
             <div className="mb-8">
-              <h3 className="text-lg font-medium text-center mb-4 text-white">Your QR Code</h3>
-              <div className="flex justify-center">
-                <QRCodeDisplay address={currentPlayer.address} size="md" />
+              <h3 className="text-lg font-medium text-center mb-4 text-white">Your Character</h3>
+              
+              {/* Character Image */}
+              <div className="flex justify-center mb-4">
+                <div className="relative w-32 h-24 rounded-lg overflow-hidden border-2 border-purple-500">
+                  <img 
+                    src={getCharacterImage(currentPlayer.nft.type)}
+                    alt={`Type ${getTypeText(currentPlayer.nft.type)} Character`}
+                    className="w-full h-full object-cover"
+                  />
+                </div>
               </div>
-              <div className="mt-4 flex justify-center">
+              
+              <div className="flex justify-center mb-4">
                 <span className={`${getTypeColorClass(currentPlayer.nft.type)} px-3 py-1 rounded-full text-white text-sm`}>
                   Type {getTypeText(currentPlayer.nft.type)} NFT
                 </span>
+              </div>
+              
+              <h3 className="text-lg font-medium text-center mb-4 text-white">Your QR Code</h3>
+              <div className="flex justify-center">
+                <QRCodeDisplay address={currentPlayer.address} size="md" />
               </div>
             </div>
           )}
@@ -158,14 +182,30 @@ export default function MobileBattle({ onBattleComplete }: MobileBattleProps) {
           
           <div className="mb-6 p-4 bg-black/30 rounded-lg">
             <div className="flex justify-between items-center">
-              <div>
-                <p className="text-gray-400 text-sm">You</p>
-                <p className="text-white font-bold">{currentPlayer?.name}</p>
+              <div className="text-center">
+                <p className="text-gray-400 text-sm mb-2">You</p>
+                <div className="relative w-24 h-18 rounded-lg overflow-hidden border-2 border-purple-500 mb-2">
+                  <img 
+                    src={getCharacterImage(currentPlayer?.nft?.type || 0)}
+                    alt={`Your Type ${getTypeText(currentPlayer?.nft?.type || 0)} Character`}
+                    className="w-full h-full object-cover"
+                  />
+                </div>
+                <p className="text-white font-bold text-sm">{currentPlayer?.name}</p>
+                <span className={`${getTypeColorClass(currentPlayer?.nft?.type || 0)} px-2 py-1 rounded-full text-white text-xs mt-1 inline-block`}>
+                  Type {getTypeText(currentPlayer?.nft?.type || 0)}
+                </span>
               </div>
               <div className="text-xl font-bold text-purple-500">VS</div>
-              <div className="text-right">
-                <p className="text-gray-400 text-sm">Opponent</p>
-                <p className="text-white font-bold">{opponent?.name}</p>
+              <div className="text-center">
+                <p className="text-gray-400 text-sm mb-2">Opponent</p>
+                <div className="relative w-24 h-18 rounded-lg overflow-hidden border-2 border-gray-600 mb-2 bg-gray-800 flex items-center justify-center">
+                  <div className="text-gray-400 text-sm">?</div>
+                </div>
+                <p className="text-white font-bold text-sm">{opponent?.name}</p>
+                <span className="bg-gray-600 px-2 py-1 rounded-full text-white text-xs mt-1 inline-block">
+                  Hidden
+                </span>
               </div>
             </div>
           </div>
@@ -211,21 +251,58 @@ export default function MobileBattle({ onBattleComplete }: MobileBattleProps) {
           <h2 className="text-xl font-bold text-center mb-6 text-white">Battle in Progress</h2>
           
           <div className="flex justify-center items-center h-64">
-            <motion.div
-              initial={{ scale: 1 }}
-              animate={{ 
-                scale: [1, 1.2, 0.9, 1.1, 1],
-                rotate: [0, 5, -5, 3, 0]
-              }}
-              transition={{ duration: 2, repeat: Infinity }}
-              className="relative w-40 h-40"
-            >
-              <div className="absolute inset-0 bg-purple-600 rounded-full opacity-20 animate-ping" />
-              <div className="absolute inset-4 bg-purple-700 rounded-full opacity-40 animate-pulse" />
-              <div className="absolute inset-8 bg-purple-800 rounded-full opacity-60 flex items-center justify-center">
-                <span className="text-white font-bold">VS</span>
-              </div>
-            </motion.div>
+            <div className="flex items-center justify-between w-full max-w-xs relative">
+              {/* Player Character */}
+              <motion.div
+                initial={{ x: -20 }}
+                animate={{ x: [-20, 0, -10, 0] }}
+                transition={{ duration: 1.5, repeat: Infinity }}
+                className="text-center"
+              >
+                <div className="relative w-20 h-15 rounded-lg overflow-hidden border-2 border-purple-500 mb-2">
+                  <img 
+                    src={getCharacterImage(currentPlayer?.nft?.type || 0)}
+                    alt="Your Character"
+                    className="w-full h-full object-cover"
+                  />
+                </div>
+                <span className={`${getTypeColorClass(currentPlayer?.nft?.type || 0)} px-2 py-1 rounded-full text-white text-xs`}>
+                  You
+                </span>
+              </motion.div>
+              
+              {/* VS Animation */}
+              <motion.div
+                initial={{ scale: 1 }}
+                animate={{ 
+                  scale: [1, 1.2, 0.9, 1.1, 1],
+                  rotate: [0, 5, -5, 3, 0]
+                }}
+                transition={{ duration: 2, repeat: Infinity }}
+                className="relative mx-4"
+              >
+                <div className="bg-purple-600 rounded-full w-16 h-16 opacity-20 animate-ping absolute" />
+                <div className="bg-purple-700 rounded-full w-12 h-12 opacity-40 animate-pulse absolute top-2 left-2" />
+                <div className="bg-purple-800 rounded-full w-8 h-8 opacity-60 flex items-center justify-center absolute top-4 left-4">
+                  <span className="text-white font-bold text-xs">VS</span>
+                </div>
+              </motion.div>
+              
+              {/* Opponent Character - Hidden during battle */}
+              <motion.div
+                initial={{ x: 20 }}
+                animate={{ x: [20, 0, 10, 0] }}
+                transition={{ duration: 1.5, repeat: Infinity }}
+                className="text-center"
+              >
+                <div className="relative w-20 h-15 rounded-lg overflow-hidden border-2 border-gray-600 mb-2 bg-gray-800 flex items-center justify-center">
+                  <div className="text-gray-400 text-sm">?</div>
+                </div>
+                <span className="bg-gray-600 px-2 py-1 rounded-full text-white text-xs">
+                  Hidden
+                </span>
+              </motion.div>
+            </div>
           </div>
           
           <div className="mt-4 text-center">
@@ -242,6 +319,41 @@ export default function MobileBattle({ onBattleComplete }: MobileBattleProps) {
       <div className="bg-card-bg rounded-xl p-6 border border-purple-900/30">
         <h2 className="text-xl font-bold text-center mb-6 text-white">Battle Result</h2>
         
+        {/* Show both characters now that battle is complete */}
+        <div className="mb-6 p-4 bg-black/30 rounded-lg">
+          <div className="flex justify-between items-center">
+            <div className="text-center">
+              <p className="text-gray-400 text-sm mb-2">You</p>
+              <div className="relative w-24 h-18 rounded-lg overflow-hidden border-2 border-purple-500 mb-2">
+                <img 
+                  src={getCharacterImage(currentPlayer?.nft?.type || 0)}
+                  alt={`Your Type ${getTypeText(currentPlayer?.nft?.type || 0)} Character`}
+                  className="w-full h-full object-cover"
+                />
+              </div>
+              <p className="text-white font-bold text-sm">{currentPlayer?.name}</p>
+              <span className={`${getTypeColorClass(currentPlayer?.nft?.type || 0)} px-2 py-1 rounded-full text-white text-xs mt-1 inline-block`}>
+                Type {getTypeText(currentPlayer?.nft?.type || 0)}
+              </span>
+            </div>
+            <div className="text-xl font-bold text-purple-500">VS</div>
+            <div className="text-center">
+              <p className="text-gray-400 text-sm mb-2">Opponent</p>
+              <div className="relative w-24 h-18 rounded-lg overflow-hidden border-2 border-orange-500 mb-2">
+                <img 
+                  src={getCharacterImage(opponent?.nft?.type || 0)}
+                  alt={`Opponent's Type ${getTypeText(opponent?.nft?.type || 0)} Character`}
+                  className="w-full h-full object-cover"
+                />
+              </div>
+              <p className="text-white font-bold text-sm">{opponent?.name}</p>
+              <span className={`${getTypeColorClass(opponent?.nft?.type || 0)} px-2 py-1 rounded-full text-white text-xs mt-1 inline-block`}>
+                Type {getTypeText(opponent?.nft?.type || 0)}
+              </span>
+            </div>
+          </div>
+        </div>
+
         {result === 'win' ? (
           <div className="bg-green-600/20 border border-green-600/30 rounded-lg p-4 mb-6">
             <h3 className="text-center text-white font-bold text-lg mb-2">Victory!</h3>
@@ -262,12 +374,30 @@ export default function MobileBattle({ onBattleComplete }: MobileBattleProps) {
           <div className="bg-purple-600/20 border border-purple-600/30 rounded-lg p-4 mb-6">
             <h3 className="text-center text-white font-bold mb-2">NFT Evolved!</h3>
             <div className="flex justify-center items-center gap-4">
-              <div className={`${getTypeColorClass(currentPlayer?.nft?.type || 0)} px-3 py-1 rounded-full text-white`}>
-                Type {getTypeText(currentPlayer?.nft?.type || 0)}
+              <div className="text-center">
+                <div className="relative w-16 h-12 rounded-lg overflow-hidden border-2 border-purple-400 mb-1">
+                  <img 
+                    src={getCharacterImage(currentPlayer?.nft?.type || 0)}
+                    alt={`Old Type ${getTypeText(currentPlayer?.nft?.type || 0)}`}
+                    className="w-full h-full object-cover"
+                  />
+                </div>
+                <div className={`${getTypeColorClass(currentPlayer?.nft?.type || 0)} px-2 py-1 rounded-full text-white text-xs`}>
+                  Type {getTypeText(currentPlayer?.nft?.type || 0)}
+                </div>
               </div>
-              <div className="text-white">→</div>
-              <div className={`${getTypeColorClass(newNftType)} px-3 py-1 rounded-full text-white`}>
-                Type {getTypeText(newNftType)}
+              <div className="text-white text-xl">→</div>
+              <div className="text-center">
+                <div className="relative w-16 h-12 rounded-lg overflow-hidden border-2 border-gold-400 mb-1 animate-pulse">
+                  <img 
+                    src={getCharacterImage(newNftType)}
+                    alt={`New Type ${getTypeText(newNftType)}`}
+                    className="w-full h-full object-cover"
+                  />
+                </div>
+                <div className={`${getTypeColorClass(newNftType)} px-2 py-1 rounded-full text-white text-xs`}>
+                  Type {getTypeText(newNftType)}
+                </div>
               </div>
             </div>
           </div>
