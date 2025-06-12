@@ -271,22 +271,22 @@ export default function MobileBattle({ onBattleComplete }: MobileBattleProps) {
                 </span>
               </motion.div>
               
-              {/* VS Animation */}
-              <motion.div
-                initial={{ scale: 1 }}
-                animate={{ 
-                  scale: [1, 1.2, 0.9, 1.1, 1],
-                  rotate: [0, 5, -5, 3, 0]
-                }}
-                transition={{ duration: 2, repeat: Infinity }}
-                className="relative mx-4"
-              >
-                <div className="bg-purple-600 rounded-full w-16 h-16 opacity-20 animate-ping absolute" />
-                <div className="bg-purple-700 rounded-full w-12 h-12 opacity-40 animate-pulse absolute top-2 left-2" />
-                <div className="bg-purple-800 rounded-full w-8 h-8 opacity-60 flex items-center justify-center absolute top-4 left-4">
-                  <span className="text-white font-bold text-xs">VS</span>
-                </div>
-              </motion.div>
+                             {/* VS Animation */}
+               <motion.div
+                 initial={{ scale: 1 }}
+                 animate={{ 
+                   scale: [1, 1.2, 0.9, 1.1, 1],
+                   rotate: [0, 5, -5, 3, 0]
+                 }}
+                 transition={{ duration: 2, repeat: Infinity }}
+                 className="relative mx-4 flex items-center justify-center"
+               >
+                 <div className="bg-purple-600 rounded-full w-16 h-16 opacity-20 animate-ping absolute" />
+                 <div className="bg-purple-700 rounded-full w-12 h-12 opacity-40 animate-pulse absolute" />
+                 <div className="bg-purple-800 rounded-full w-8 h-8 opacity-60 flex items-center justify-center absolute">
+                   <span className="text-white font-bold text-xs">VS</span>
+                 </div>
+               </motion.div>
               
               {/* Opponent Character - Hidden during battle */}
               <motion.div
