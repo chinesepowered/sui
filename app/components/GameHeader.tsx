@@ -24,10 +24,17 @@ export default function GameHeader() {
         
         <div className="flex items-center gap-4">
           <Link 
+            href="/leaderboard" 
+            className="px-4 py-2 rounded-lg bg-purple-800/50 text-white text-sm hover:bg-purple-800/70 transition-colors"
+          >
+            Leaderboard
+          </Link>
+          
+          <Link 
             href="/mobile" 
             className="px-4 py-2 rounded-lg bg-purple-800/50 text-white text-sm hover:bg-purple-800/70 transition-colors"
           >
-            Try Mobile Mode
+            Game Mode
           </Link>
           
           {currentPlayer && (

@@ -39,6 +39,16 @@ export default function NFTCard({
     }
   };
 
+  // Get character image based on NFT type
+  const getCharacterImage = (type: number) => {
+    switch (type) {
+      case 0: return '/cat.jpg';      // Type A
+      case 1: return '/llama.jpg';    // Type B
+      case 2: return '/dog.jpg';      // Type C
+      default: return '/cat.jpg';
+    }
+  };
+
   const cardVariants = {
     idle: { scale: 1 },
     hover: { scale: 1.05, boxShadow: "0px 10px 30px rgba(0, 0, 0, 0.2)" },
@@ -64,15 +74,24 @@ export default function NFTCard({
       onClick={onClick}
       style={{ cursor: onClick ? 'pointer' : 'default' }}
     >
-      <div className={`absolute inset-0 ${getTypeClass()} opacity-80`} />
+      {/* Character Image Background */}
+      <div className="absolute inset-0">
+        <img 
+          src={getCharacterImage(nft.type)}
+          alt={`${getTypeName()} Character`}
+          className="w-full h-full object-cover"
+        />
+        <div className={`absolute inset-0 ${getTypeClass()} opacity-60`} />
+      </div>
+      
       <div className="relative p-4 h-full flex flex-col justify-between z-10">
         <div className="mb-4 text-center">
-          <div className="text-white font-bold text-lg">NFT {nft.id.slice(-4)}</div>
-          <div className="text-white/80 text-sm">{getTypeName()}</div>
+          <div className="text-white font-bold text-lg drop-shadow-lg">NFT {nft.id.slice(-4)}</div>
+          <div className="text-white/90 text-sm drop-shadow-lg">{getTypeName()}</div>
         </div>
         
         {showDetails && (
-          <div className="bg-black/30 p-3 rounded-lg">
+          <div className="bg-black/50 backdrop-blur-sm p-3 rounded-lg border border-white/20">
             <div className="text-white/90 flex justify-between">
               <span>Kills:</span>
               <span className="font-mono">{nft.kills}</span>
