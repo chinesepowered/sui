@@ -1,9 +1,9 @@
 "use client";
 
 import React from 'react';
-import { ConnectButton } from '@mysten/dapp-kit';
 import { useGameStore } from '../store/gameStore';
 import Link from 'next/link';
+import CustomConnectButton from './CustomConnectButton';
 
 export default function GameHeader() {
   const { currentPlayer } = useGameStore();
@@ -44,7 +44,7 @@ export default function GameHeader() {
             </div>
           )}
           
-          <ConnectButton />
+          <CustomConnectButton />
         </div>
       </div>
     </header>
