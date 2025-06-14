@@ -159,6 +159,16 @@ export default function BattleArena() {
     return type === 0 ? 'A' : type === 1 ? 'B' : 'C';
   };
 
+  // Get character image based on NFT type
+  const getCharacterImage = (type: number) => {
+    switch (type) {
+      case 0: return '/cat.jpg';      // Type A
+      case 1: return '/llama.jpg';    // Type B
+      case 2: return '/dog.jpg';      // Type C
+      default: return '/cat.jpg';
+    }
+  };
+
   if (!currentPlayer || !selectedOpponent || !currentPlayer.nft || !selectedOpponent.nft) {
     return null;
   }
@@ -195,6 +205,18 @@ export default function BattleArena() {
           <div className="flex flex-col md:flex-row justify-around items-center gap-8">
             <div className="text-center">
               <h3 className="text-white font-bold mb-2">{currentPlayer.name}</h3>
+              
+              {/* Player Character Image */}
+              <div className="flex justify-center mb-4">
+                <div className="relative w-32 h-24 rounded-lg overflow-hidden border-2 border-purple-500">
+                  <img 
+                    src={getCharacterImage(currentPlayer.nft.type)}
+                    alt={`Your Type ${getTypeText(currentPlayer.nft.type)} Character`}
+                    className="w-full h-full object-cover"
+                  />
+                </div>
+              </div>
+              
               <div className="flex items-center justify-center mb-2">
                 <span className="bg-purple-900/50 px-3 py-1 rounded-full text-xs text-white">
                   Type {getTypeText(currentPlayer.nft.type)}
@@ -256,6 +278,18 @@ export default function BattleArena() {
             
             <div className="text-center">
               <h3 className="text-white font-bold mb-2">{selectedOpponent.name}</h3>
+              
+              {/* Opponent Character Image */}
+              <div className="flex justify-center mb-4">
+                <div className="relative w-32 h-24 rounded-lg overflow-hidden border-2 border-orange-500">
+                  <img 
+                    src={getCharacterImage(selectedOpponent.nft.type)}
+                    alt={`${selectedOpponent.name}'s Type ${getTypeText(selectedOpponent.nft.type)} Character`}
+                    className="w-full h-full object-cover"
+                  />
+                </div>
+              </div>
+              
               <div className="flex items-center justify-center mb-2">
                 <span className="bg-purple-900/50 px-3 py-1 rounded-full text-xs text-white">
                   Type {getTypeText(selectedOpponent.nft.type)}

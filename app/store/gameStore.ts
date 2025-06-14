@@ -42,7 +42,7 @@ type GameState = {
   isBattling: boolean;
   isAnimating: boolean;
   // Actions
-  setCurrentPlayer: (player: Player) => void;
+  setCurrentPlayer: (player: Player | null) => void;
   addNFT: (nft: NFT) => void;
   removeNFT: (nftId: string) => void;
   proposeBattle: (from: Player, to: Player, fromNftId: string) => void;

@@ -44,12 +44,20 @@ export default function MobilePage() {
           </div>
         </div>
         
-        <Link 
-          href="/"
-          className="px-4 py-2 rounded-lg bg-black/30 text-white text-sm"
-        >
-          View Battle Arena
-        </Link>
+        <div className="flex gap-2">
+          <Link 
+            href="/leaderboard"
+            className="px-3 py-2 rounded-lg bg-black/30 text-white text-xs"
+          >
+            Leaderboard
+          </Link>
+          <Link 
+            href="/"
+            className="px-3 py-2 rounded-lg bg-black/30 text-white text-xs"
+          >
+            Battle Arena
+          </Link>
+        </div>
       </header>
       
       {/* Mobile Battle Interface */}
