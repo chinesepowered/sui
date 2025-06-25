@@ -1,11 +1,11 @@
 "use client";
 
 import React, { useState, useEffect } from 'react';
-import { useCurrentAccount } from '@mysten/dapp-kit';
+import { useCurrentAccount, useSignAndExecuteTransaction } from '@mysten/dapp-kit';
 import CustomConnectButton from '../../components/CustomConnectButton';
 import SuiNFTCard from './SuiNFTCard';
 import SuiBattleInterface from './SuiBattleInterface';
-import { getUserNFTs, proposeBattle, executeBattle } from '../utils/suiRealUtils';
+import { getUserNFTs, createProposeBattleTransaction, createBattleTransaction } from '../utils/suiRealUtils';
 
 interface NFT {
   id: string;
@@ -17,6 +17,7 @@ interface NFT {
 
 export default function SuiUserContainer() {
   const currentAccount = useCurrentAccount();
+  const { mutate: signAndExecuteTransaction } = useSignAndExecuteTransaction();
   const [userNFTs, setUserNFTs] = useState<NFT[]>([]);
   const [selectedNFT, setSelectedNFT] = useState<NFT | null>(null);
   const [loading, setLoading] = useState(false);
@@ -52,11 +53,24 @@ export default function SuiUserContainer() {
     
     setBattleInProgress(true);
     try {
-      await proposeBattle(selectedNFT.id, opponentAddress);
-      alert('Battle proposal sent!');
+      const transaction = createProposeBattleTransaction(selectedNFT.id, opponentAddress);
+      
+      signAndExecuteTransaction(
+        { transaction },
+        {
+          onSuccess: (result) => {
+            console.log('Battle proposal successful:', result);
+            alert('Battle proposal sent successfully!');
+          },
+          onError: (error) => {
+            console.error('Battle proposal failed:', error);
+            alert('Failed to propose battle: ' + error.message);
+          }
+        }
+      );
     } catch (error) {
-      console.error('Error proposing battle:', error);
-      alert('Failed to propose battle');
+      console.error('Error creating battle proposal:', error);
+      alert('Failed to create battle proposal');
     } finally {
       setBattleInProgress(false);
     }
@@ -67,12 +81,25 @@ export default function SuiUserContainer() {
     
     setBattleInProgress(true);
     try {
-      const result = await executeBattle(selectedNFT.id, opponentNFTId);
-      alert(`Battle completed! ${result.winner === currentAccount.address ? 'You won!' : 'You lost!'}`);
-      await loadUserNFTs(); // Refresh NFTs
+      const transaction = createBattleTransaction(selectedNFT.id, opponentNFTId);
+      
+      signAndExecuteTransaction(
+        { transaction },
+        {
+          onSuccess: (result) => {
+            console.log('Battle execution successful:', result);
+            alert('Battle completed successfully! Check the blockchain for results.');
+            loadUserNFTs(); // Refresh NFTs
+          },
+          onError: (error) => {
+            console.error('Battle execution failed:', error);
+            alert('Failed to execute battle: ' + error.message);
+          }
+        }
+      );
     } catch (error) {
-      console.error('Error executing battle:', error);
-      alert('Failed to execute battle');
+      console.error('Error creating battle transaction:', error);
+      alert('Failed to create battle transaction');
     } finally {
       setBattleInProgress(false);
     }

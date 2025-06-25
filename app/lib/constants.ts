@@ -1,5 +1,8 @@
-// Contract and package information from Move.toml and deployment
+// Contract and package information from deployment in wallet_build.txt
+// Transaction Digest: yKR9uTGvNuRXfukQb9w9cBUWbAex33HWGj4K1Ev7S5T
 export const PACKAGE_ID = "0x757b3cc8c5d97c431e0299408414ccf09046583c59e26e9cf3b2e7a0b77376ce";
+export const ADMIN_CAP_ID = "0xe63d7628af1381d2592878e9e840fdbb7fb3dcf16c129fecfe16daf2cba9bca0";
+export const ADMIN_ADDRESS = "0x5a508e23daf5aa33196da69d8c4161fb84851f4ec2cfcc8db1618369205ddcb2";
 export const MODULE_NAME = "game";
 
 // NFT Types

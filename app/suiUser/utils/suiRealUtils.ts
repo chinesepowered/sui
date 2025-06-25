@@ -1,5 +1,5 @@
 import { SuiClient } from "@mysten/sui/client";
-import { TransactionBlock } from "@mysten/sui/transactions";
+import { Transaction } from "@mysten/sui/transactions";
 import { NETWORK_RPC_URL, PACKAGE_ID } from '../../lib/constants';
 
 // Initialize Sui client
@@ -59,52 +59,55 @@ export const getUserNFTs = async (ownerAddress: string): Promise<NFT[]> => {
   }
 };
 
-// Propose a battle
+// Create a battle proposal transaction
+export const createProposeBattleTransaction = (nftId: string, opponentAddress: string): Transaction => {
+  const txb = new Transaction();
+  
+  txb.moveCall({
+    target: `${PACKAGE_ID}::game::propose_battle`,
+    arguments: [
+      txb.object(nftId),
+      txb.pure.address(opponentAddress)
+    ],
+  });
+
+  return txb;
+};
+
+// Helper function for backward compatibility - now just creates transaction
 export const proposeBattle = async (nftId: string, opponentAddress: string): Promise<string> => {
   try {
-    const txb = new TransactionBlock();
-    
-    txb.moveCall({
-      target: `${PACKAGE_ID}::game::propose_battle`,
-      arguments: [
-        txb.object(nftId),
-        txb.pure(opponentAddress)
-      ],
-    });
-
-    // Note: In a real implementation, you would need to sign and execute this transaction
-    // For now, we'll return a simulated transaction ID
-    const simulatedTxId = `sim_propose_${Math.random().toString(36).substring(2, 10)}`;
-    
-    console.log('Battle proposal transaction prepared:', simulatedTxId);
+    // Return a simulated ID - actual execution should be done in the component
+    const simulatedTxId = `prepare_propose_${Math.random().toString(36).substring(2, 10)}`;
+    console.log('Battle proposal transaction created for:', { nftId, opponentAddress });
     return simulatedTxId;
   } catch (error) {
-    console.error('Error proposing battle:', error);
+    console.error('Error creating battle proposal:', error);
     throw error;
   }
 };
 
-// Execute a battle
+// Create a battle execution transaction
+export const createBattleTransaction = (responderNftId: string, requesterNftId: string): Transaction => {
+  const txb = new Transaction();
+  
+  txb.moveCall({
+    target: `${PACKAGE_ID}::game::battle_with`,
+    arguments: [
+      txb.object(responderNftId),
+      txb.object(requesterNftId),
+      txb.object('0x8'), // Random object
+      txb.object('0x6')  // Clock object
+    ],
+  });
+
+  return txb;
+};
+
+// Helper function for backward compatibility - now just creates simulated result
 export const executeBattle = async (userNftId: string, opponentNftId: string): Promise<BattleResult> => {
   try {
-    const txb = new TransactionBlock();
-    
-    // Get random object (required for battle)
-    const randomObj = '0x8'; // System random object
-    const clockObj = '0x6'; // System clock object
-    
-    txb.moveCall({
-      target: `${PACKAGE_ID}::game::battle_with`,
-      arguments: [
-        txb.object(userNftId),
-        txb.object(opponentNftId),
-        txb.object(randomObj),
-        txb.object(clockObj)
-      ],
-    });
-
-    // Note: In a real implementation, you would need to sign and execute this transaction
-    // For now, we'll return a simulated battle result
+    // Return simulated result - actual execution should be done in the component
     const simulatedResult: BattleResult = {
       winner: Math.random() > 0.5 ? 'user' : 'opponent',
       loser: Math.random() > 0.5 ? 'opponent' : 'user',
@@ -114,10 +117,10 @@ export const executeBattle = async (userNftId: string, opponentNftId: string): P
       winnerMutations: Math.floor(Math.random() * 3) + 1,
     };
     
-    console.log('Battle executed:', simulatedResult);
+    console.log('Battle transaction created for:', { userNftId, opponentNftId });
     return simulatedResult;
   } catch (error) {
-    console.error('Error executing battle:', error);
+    console.error('Error creating battle transaction:', error);
     throw error;
   }
 };

@@ -1,12 +1,12 @@
 "use client";
 
 import React, { useState, useEffect } from 'react';
-import { useCurrentAccount } from '@mysten/dapp-kit';
+import { useCurrentAccount, useSignAndExecuteTransaction } from '@mysten/dapp-kit';
 import CustomConnectButton from '../../components/CustomConnectButton';
 import NFTMintInterface from './NFTMintInterface';
 import AdminStats from './AdminStats';
 import BattleHistory from './BattleHistory';
-import { batchMintNFTs, getAdminStats, getAllBattleEvents } from '../utils/suiAdminUtils';
+import { createBatchMintTransaction, getAdminStats, getAllBattleEvents } from '../utils/suiAdminUtils';
 
 interface AdminStats {
   totalNFTs: number;
@@ -17,6 +17,7 @@ interface AdminStats {
 
 export default function SuiAdminContainer() {
   const currentAccount = useCurrentAccount();
+  const { mutate: signAndExecuteTransaction } = useSignAndExecuteTransaction();
   const [activeTab, setActiveTab] = useState<'mint' | 'stats' | 'history'>('mint');
   const [adminStats, setAdminStats] = useState<AdminStats>({
     totalNFTs: 0,
@@ -56,12 +57,25 @@ export default function SuiAdminContainer() {
     if (!currentAccount?.address) return;
     
     try {
-      await batchMintNFTs(addresses);
-      alert(`Successfully minted NFTs for ${addresses.length} addresses!`);
-      await loadAdminData(); // Refresh stats
+      const transaction = createBatchMintTransaction(addresses);
+      
+      signAndExecuteTransaction(
+        { transaction },
+        {
+          onSuccess: (result) => {
+            console.log('Batch mint successful:', result);
+            alert(`Successfully minted NFTs for ${addresses.length} addresses!`);
+            loadAdminData(); // Refresh stats
+          },
+          onError: (error) => {
+            console.error('Batch mint failed:', error);
+            alert('Failed to mint NFTs: ' + error.message);
+          }
+        }
+      );
     } catch (error) {
-      console.error('Error minting NFTs:', error);
-      alert('Failed to mint NFTs');
+      console.error('Error creating batch mint transaction:', error);
+      alert('Failed to create mint transaction');
     }
   };
 

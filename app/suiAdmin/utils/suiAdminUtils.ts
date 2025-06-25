@@ -1,6 +1,6 @@
 import { SuiClient } from "@mysten/sui/client";
-import { TransactionBlock } from "@mysten/sui/transactions";
-import { NETWORK_RPC_URL, PACKAGE_ID } from '../../lib/constants';
+import { Transaction } from "@mysten/sui/transactions";
+import { NETWORK_RPC_URL, PACKAGE_ID, ADMIN_CAP_ID } from '../../lib/constants';
 
 // Initialize Sui client
 const suiClient = new SuiClient({ url: NETWORK_RPC_URL });
@@ -12,34 +12,34 @@ interface AdminStats {
   recentMints: number;
 }
 
-// Batch mint NFTs to multiple addresses
+// Create a batch mint transaction
+export const createBatchMintTransaction = (addresses: string[]): Transaction => {
+  const txb = new Transaction();
+  
+  txb.moveCall({
+    target: `${PACKAGE_ID}::game::batch_mint`,
+    arguments: [
+      txb.object(ADMIN_CAP_ID), // Admin capability object
+      txb.pure.vector('address', addresses), // Array of addresses
+      txb.object('0x8') // Random object
+    ],
+  });
+
+  return txb;
+};
+
+// Helper function for backward compatibility - now just creates transaction
 export const batchMintNFTs = async (addresses: string[]): Promise<string> => {
   try {
-    const txb = new TransactionBlock();
+    // Return a simulated ID - actual execution should be done in the component
+    const simulatedTxId = `prepare_mint_${Math.random().toString(36).substring(2, 10)}`;
     
-    // Get random object (required for minting)
-    const randomObj = '0x8'; // System random object
-    
-    txb.moveCall({
-      target: `${PACKAGE_ID}::game::batch_mint`,
-      arguments: [
-        // Note: This would need the AdminCap object in a real implementation
-        txb.object('ADMIN_CAP_OBJECT_ID'), // Admin capability object
-        txb.pure(addresses), // Array of addresses
-        txb.object(randomObj) // Random object
-      ],
-    });
-
-    // Note: In a real implementation, you would need to sign and execute this transaction
-    // For now, we'll return a simulated transaction ID
-    const simulatedTxId = `sim_batch_mint_${Math.random().toString(36).substring(2, 10)}`;
-    
-    console.log('Batch mint transaction prepared for addresses:', addresses);
+    console.log('Batch mint transaction created for addresses:', addresses);
     console.log('Simulated TX ID:', simulatedTxId);
     
     return simulatedTxId;
   } catch (error) {
-    console.error('Error batch minting NFTs:', error);
+    console.error('Error creating batch mint transaction:', error);
     throw error;
   }
 };
